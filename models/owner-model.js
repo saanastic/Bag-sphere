@@ -8,10 +8,10 @@ const ownerSchema=new mongoose.Schema({
     products:{
         type:Array,
         default:[] 
-    }.,
+    },
     contact:Number,
-    picture:String
-    gstint:String, 
+    picture:String,
+    gstint :String, 
 
 });
 module.exports=mongoose.model('owner',ownerSchema);
