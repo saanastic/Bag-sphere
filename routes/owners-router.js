@@ -2,6 +2,7 @@ const express=require('express');
 const router=express.Router();
 const Ownermodel=require('../models/owner-model');
 const dotenv=require('dotenv');
+const productModel = require('../models/product-model');
 dotenv.config();
 
 router.get('/',(req,res)=>{
@@ -20,4 +21,12 @@ if(process.env.NODE_ENV==='development') {
         }
     });
 }
+
+
+
+router.get('/admin',async (req,res)=>{
+   let success = req.flash('success','Product created successfully');
+   let products=await productModel.find();
+   res.render('createproducts',{success, products});
+});
 module.exports=router;

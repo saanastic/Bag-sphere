@@ -1,0 +1,104 @@
+<%- include('./partials/header') %>
+
+<div class="w-full min-h-screen flex flex-col lg:flex-row gap-8 px-4 sm:px-8 lg:px-16 py-10 bg-zinc-100">
+
+    <!-- LEFT: ADDRESS FORM -->
+    <div class="w-full lg:w-[60%] bg-white rounded-2xl p-8 shadow-lg">
+
+        <h2 class="text-2xl font-bold mb-6 border-b border-zinc-200 pb-4">Delivery Details</h2>
+
+        <!-- posts to /payment now, not /placeorder -->
+        <form action="/gotopayment" method="POST">
+
+            <div class="mb-5">
+                <label class="block text-sm font-semibold text-zinc-600 mb-2">Full Name</label>
+                <input
+                    type="text"
+                    value="<%= user.fullname %>"
+                    disabled
+                    class="w-full border border-zinc-300 rounded-xl px-4 py-3 bg-zinc-100 text-zinc-500 cursor-not-allowed"
+                />
+            </div>
+
+            <div class="mb-5">
+                <label class="block text-sm font-semibold text-zinc-600 mb-2">Email</label>
+                <input
+                    type="email"
+                    value="<%= user.email %>"
+                    disabled
+                    class="w-full border border-zinc-300 rounded-xl px-4 py-3 bg-zinc-100 text-zinc-500 cursor-not-allowed"
+                />
+            </div>
+
+            <div class="mb-5">
+                <label class="block text-sm font-semibold text-zinc-600 mb-2">
+                    Delivery Address <span class="text-red-500">*</span>
+                </label>
+                <textarea
+                    name="address"
+                    rows="4"
+                    placeholder="House no., Street, City, State, PIN code"
+                    required
+                    class="w-full border border-zinc-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black resize-none transition"
+                ></textarea>
+            </div>
+
+            <!-- ORDER SUMMARY -->
+            <div class="bg-zinc-50 rounded-xl p-5 mb-6 border border-zinc-200">
+                <h3 class="font-semibold text-lg mb-3">Order Summary</h3>
+                <% user.cart.forEach(function(product){ %>
+                    <div class="flex justify-between text-sm py-1 border-b border-zinc-200 last:border-0">
+                        <span><%= product.name %></span>
+                        <span>₹ <%= product.discount > 0 ? product.price - product.discount : product.price %></span>
+                    </div>
+                <% }) %>
+                <div class="flex justify-between text-sm py-1 mt-2">
+                    <span>Platform Fee</span>
+                    <span>₹ 20</span>
+                </div>
+                <div class="flex justify-between font-bold text-lg mt-3 pt-3 border-t border-zinc-300">
+                    <span>Total</span>
+                    <span class="text-green-600">₹ <%= finalAmount %></span>
+                </div>
+            </div>
+
+            <button
+                type="submit"
+                class="w-full py-4 rounded-xl bg-black text-white text-lg font-semibold hover:bg-zinc-800 transition flex items-center justify-center gap-2"
+            >
+                Continue to Payment <i class="ri-arrow-right-line"></i>
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- RIGHT: ITEMS PREVIEW -->
+    <div class="w-full lg:w-[40%] flex flex-col gap-4 lg:sticky lg:top-6 self-start">
+        <h2 class="text-xl font-bold text-zinc-700">Your Items (<%= user.cart.length %>)</h2>
+        <% user.cart.forEach(function(product){ %>
+            <div
+                class="flex items-center gap-4 rounded-2xl p-4 shadow-md"
+                style="background-color: <%= product.bgcolor %>; color: <%= product.textcolor %>;"
+            >
+                <div
+                    class="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden"
+                    style="background-color: <%= product.panelcolor %>;"
+                >
+                    <img
+                        class="w-full h-full object-contain"
+                        src="data:image/png;base64,<%= product.image.toString('base64') %>"
+                        alt="<%= product.name %>"
+                    />
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg"><%= product.name %></h3>
+                    <p class="text-sm">₹ <%= product.discount > 0 ? product.price - product.discount : product.price %></p>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+</div>
+
+<%- include('./partials/footer') %>
